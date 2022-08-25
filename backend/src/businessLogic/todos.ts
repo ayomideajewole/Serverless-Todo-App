@@ -12,17 +12,17 @@ const toDoAccess = new TodosAccess();
 
 
 
-export async function getAllTodo(jwtToken: string): Promise<TodoItem[]> {
+export async function getAllTodos(jwtToken: string): Promise<TodoItem[]> {
     const userId = parseUserId(jwtToken);
-    return toDoAccess.getAllTodo(userId);
+    return toDoAccess.getAllTodos(userId);
 }
 
-export function createTodo(createTodoRequest: CreateTodoRequest, jwtToken: string): Promise<TodoItem> {
+export function createTodoItem(createTodoRequest: CreateTodoRequest, jwtToken: string): Promise<TodoItem> {
     const userId = parseUserId(jwtToken);
     const todoId =  uuidv4();
     const s3Bucket = process.env.ATTACHMENT_S3_BUCKET;
     
-    return toDoAccess.createTodo({
+    return toDoAccess.createTodoItem({
         userId: userId,
         todoId: todoId,
         attachmentUrl:  `https://${s3Bucket}.s3.amazonaws.com/${todoId}`, 
@@ -32,14 +32,14 @@ export function createTodo(createTodoRequest: CreateTodoRequest, jwtToken: strin
     });
 }
 
-export function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, jwtToken: string): Promise<TodoUpdate> {
+export function updateTodoItem(updateTodoRequest: UpdateTodoRequest, todoId: string, jwtToken: string): Promise<TodoUpdate> {
     const userId = parseUserId(jwtToken);
-    return toDoAccess.updateTodo(updateTodoRequest, todoId, userId);
+    return toDoAccess.updateTodoItem(updateTodoRequest, todoId, userId);
 }
 
-export function deleteTodo(todoId: string, jwtToken: string): Promise<string> {
+export function deleteTodoItem(todoId: string, jwtToken: string): Promise<string> {
     const userId = parseUserId(jwtToken);
-    return toDoAccess.deleteTodo(todoId, userId);
+    return toDoAccess.deleteTodoItem(todoId, userId);
 }
 
 export function generateUploadUrl(todoId: string): Promise<string> {

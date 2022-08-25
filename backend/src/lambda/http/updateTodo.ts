@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { updateTodo } from '../../businessLogic/todos'
+import { updateTodoItem } from '../../businessLogic/todos'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 
 export const handler = middy(
@@ -16,7 +16,7 @@ export const handler = middy(
     const split = authorization.split(' ');
     const jwtToken = split[1];
 
-    const todoItem = await updateTodo(updatedTodo, todoId, jwtToken)
+    const todoItem = await updateTodoItem(updatedTodo, todoId, jwtToken)
 
     return {
       statusCode: 200,

@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 
-import { getAllTodo as getAllTodo } from '../../businessLogic/todos'
+import { getAllTodos as getAllTodos } from '../../businessLogic/todos'
 // import { getUserId } from '../utils';
 
 // TODO: Get all TODO items for a current user
@@ -14,7 +14,7 @@ export const handler = middy(
     const authorization = event.headers.Authorization;
     const split = authorization.split(' ');
     const jwtToken = split[1];
-    const todos = await getAllTodo(jwtToken);
+    const todos = await getAllTodos(jwtToken);
 
     return {
       statusCode: 200,

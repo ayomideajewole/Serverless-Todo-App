@@ -20,8 +20,8 @@ export class TodosAccess {
       private readonly bucketName = process.env.ATTACHMENT_S3_BUCKET) {
   }
 
-  async getAllTodo(userId: string): Promise<TodoItem[]> {
-      console.log("Getting all todo");
+  async getAllTodos(userId: string): Promise<TodoItem[]> {
+      console.log("Getting all todo items...");
 
       const params = {
           TableName: this.todoTable,
@@ -41,8 +41,8 @@ export class TodosAccess {
       return items as TodoItem[];
   }
 
-  async createTodo(todoItem: TodoItem): Promise<TodoItem> {
-      console.log("Creating new todo");
+  async createTodoItem(todoItem: TodoItem): Promise<TodoItem> {
+      console.log("Creating your todo...");
 
       const params = {
           TableName: this.todoTable,
@@ -55,8 +55,8 @@ export class TodosAccess {
       return todoItem as TodoItem;
   }
 
-  async updateTodo(todoUpdate: TodoUpdate, todoId: string, userId: string): Promise<TodoUpdate> {
-      console.log("Updating todo");
+  async updateTodoItem(todoUpdate: TodoUpdate, todoId: string, userId: string): Promise<TodoUpdate> {
+      console.log("Updating your todo item...");
 
       const params = {
           TableName: this.todoTable,
@@ -64,16 +64,16 @@ export class TodosAccess {
               "userId": userId,
               "todoId": todoId
           },
-          UpdateExpression: "set #a = :a, #b = :b, #c = :c",
+          UpdateExpression: "set %l = :L, %m = :M, %n = :N",
           ExpressionAttributeNames: {
-              "#a": "name",
-              "#b": "dueDate",
-              "#c": "done"
+              "%l": "name",
+              "%m": "dueDate",
+              "%n": "done"
           },
           ExpressionAttributeValues: {
-              ":a": todoUpdate['name'],
-              ":b": todoUpdate['dueDate'],
-              ":c": todoUpdate['done']
+              ":L": todoUpdate['name'],
+              ":M": todoUpdate['dueDate'],
+              ":N": todoUpdate['done']
           },
           ReturnValues: "ALL_NEW"
       };
@@ -85,8 +85,8 @@ export class TodosAccess {
       return attributes as TodoUpdate;
   }
 
-  async deleteTodo(todoId: string, userId: string): Promise<string> {
-      console.log("Deleting todo");
+  async deleteTodoItem(todoId: string, userId: string): Promise<string> {
+      console.log("Deleting todo item...");
 
       const params = {
           TableName: this.todoTable,
@@ -98,20 +98,22 @@ export class TodosAccess {
 
       const result = await this.docClient.delete(params).promise();
       console.log(result);
+      console.log("Todo deleted.");
+      
 
       return "" as string;
   }
 
   async generateUploadUrl(todoId: string): Promise<string> {
-      console.log("Generating URL");
+      console.log("Generating upload Url...");
 
-      const url = this.s3Client.getSignedUrl('putObject', {
+      const uploadUrl = this.s3Client.getSignedUrl('putObject', {
           Bucket: this.bucketName,
           Key: todoId,
           Expires: 1000,
       });
-      console.log(url);
+      console.log(uploadUrl);
 
-      return url as string;
+      return uploadUrl as string;
   }
 }
