@@ -7,6 +7,7 @@ plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
+  - serverless-reqvalidator-plugin
 
 provider:
   name: aws
@@ -58,7 +59,6 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
-          reqValidatorName: RequestBodyValidator
     iamRoleStatementsName: ${self:provider.environment.PROJECT_TITLE}-get-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
@@ -70,9 +70,6 @@ functions:
           - xray:PutTraceSegments
         Resource:
           - '*'
-      - Effect: Allow
-        Action: 's3:GetObject'
-        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
   # TODO: Configure this function - 
   # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
@@ -139,7 +136,6 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
-          reqValidatorName: RequestBodyValidator
     iamRoleStatementsName: ${self:provider.environment.PROJECT_TITLE}-delete-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
@@ -162,7 +158,6 @@ functions:
           path: todos/{todoId}/attachment
           cors: true
           authorizer: Auth
-          reqValidatorName: RequestBodyValidator
     iamRoleStatements:
       - Effect: Allow
         Action:
