@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { deleteTodo } from '../../businessLogic/todos'
+import { deleteTodoItem } from '../../businessLogic/todos'
 // import { getUserId } from '../utils'
 
 export const handler = middy(
@@ -14,7 +14,7 @@ export const handler = middy(
     const authorization = event.headers.Authorization;
     const split = authorization.split(' ');
     const jwtToken = split[1];
-    const deletedItem = await deleteTodo(todoId, jwtToken);
+    const deletedItem = await deleteTodoItem(todoId, jwtToken);
     return {
       statusCode: 200,
       headers: {
